@@ -12,5 +12,5 @@ services.factory('Episodes', ['$http', '$resource', function($http, $resource){
 }]);
 
 services.factory('PB', ['$http', '$resource', function($http, $resource){
-    return $resource('/pb?keyword=:episode');
+    return $resource('/pb');
 }]);

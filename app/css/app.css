@@ -1,5 +1,8 @@
 /* app css stylesheet */
 
+.cursor {
+    cursor: pointer;
+}
 .search {
     width: 600px;
     margin: 0 auto;
@@ -7,4 +10,11 @@
 
 .thumbnail {
     margin: 20px 0 0;
+}
+
+.episodes {
+    margin: 0 20px;
+}
+.episodes .magnet {
+    display: inline;
 }
