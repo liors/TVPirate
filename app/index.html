@@ -40,7 +40,6 @@
 
     </div>
 
-
     <script type='text/ng-template' id="shows">
         <ul class="media-list">
             <li class="media" ng-repeat="show in Series">
@@ -52,31 +51,13 @@
                         <p><a ng-click="getEpisodes(show)" class="btn btn-primary" role="button">Episodes</a></p>
                     </div>
 
-                    <ng-include src="'episodes'"></ng-include>
-                    
+                    <episodes ng-model="show"></episodes>
+
                 </div>
             </li>
         </ul>
     </script>
-
-    <script type="text/ng-template" id="episodes">
-        <div class="episodes panel panel-default" ng-show="Episodes.length > 0">
-            <div class="panel-heading">Available Episodes:</div>
-            <ul class="list-group">
-                <li class="list-group-item" ng-repeat="episode in Episodes">
-                    <span ng-bind="episode.SeasonNumber"></span>:E<span ng-bind="episode.EpisodeNumber"></span>
-                    <span ng-bind="episode.EpisodeName"></span>
-                    <span ng-bind="episode.FirstAired"></span>
-                    <span ng-click="getPB(episode)" class="label label-primary cursor" ng-hide="episode.pbActive">Pirate it</span>
-                    <span><a ng-href="{{ episode.pb }}">
-                            <img ng-show="episode.pbActive" ng-src="{{ episode.magnet }}" class="magnet"/>
-                        </a>
-                    </span>
-                </li>
-            </ul>
-        </div>
-    </script>
-
+   
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.7/angular.min.js"></script>
     <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.1.5/angular-resource.min.js"></script>

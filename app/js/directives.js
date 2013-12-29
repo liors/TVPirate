@@ -1,11 +1,13 @@
 'use strict';
 
 /* Directives */
-
-
-angular.module('tvPirateApp.directives', []).
-  directive('appVersion', ['version', function(version) {
-    return function(scope, elm, attrs) {
-      elm.text(version);
-    };
-  }]);
+var directives = angular.module('tvPirateApp.directives', []);
+directives.directive('episodes', function() {
+    return {
+        restrict: 'E',
+        templateUrl: 'episodes.html',
+        link: function(scope) {
+            debugger
+        }
+    }
+  });

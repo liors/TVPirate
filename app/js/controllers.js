@@ -30,7 +30,7 @@ var SearchCtrl = ['$scope', '$timeout', 'Shows', 'Episodes', 'PB',
                 episodes = _.sortBy(episodes, function(episode){
                     return episode.FirstAired;
                 }).reverse();
-                $scope.Episodes =  _.map(episodes, function(episode){
+                show.episodes =  _.map(episodes, function(episode){
                         episode.SeasonNumber = 'S0'+episode.SeasonNumber;
                         episode.magnet = 'img/loading.gif';
                         episode.SeriesName = show.SeriesName;
@@ -43,7 +43,6 @@ var SearchCtrl = ['$scope', '$timeout', 'Shows', 'Episodes', 'PB',
             episode.pbActive = true;
             PB.get({'keyword': episode.SeriesName + ' ' + episode.EpisodeName},
                 function success(res){
-                    debugger
                     if (res && res.results && res.results.length > 0) {
                         episode.pb = res.results[0].magnetlink;
                         episode.magnet = 'img/icon-magnet.gif';
