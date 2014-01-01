@@ -8,5 +8,8 @@
     "thetvdb-api": "~0.1.0",
     "jsdom": "~0.8.10",
     "request": "~2.30.0"
+  },
+  "engines": {
+    "node": "0.10.x"
   }
 }

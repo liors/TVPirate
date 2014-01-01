@@ -1,0 +1,16 @@
+<div class="episodes panel panel-default" ng-show="show.episodes.length > 0">
+    <div class="panel-heading">Available Episodes:</div>
+    <ul class="list-group">
+        <li class="list-group-item" ng-repeat="episode in show.episodes">
+            <span ng-bind="episode.SeasonNumber"></span>:E<span ng-bind="episode.EpisodeNumber"></span>
+            <span ng-bind="episode.EpisodeName"></span>
+            <span ng-bind="episode.FirstAired"></span>
+            <span ng-click="getPB(episode)" class="label label-primary cursor"
+                  ng-hide="episode.pbActive">Pirate it</span>
+                            <span><a ng-href="{{ episode.pb }}">
+                                <img ng-show="episode.pbActive" ng-src="{{ episode.magnet }}" class="magnet"/>
+                            </a>
+                            </span>
+        </li>
+    </ul>
+</div>

@@ -9,6 +9,7 @@ var SearchCtrl = ['$scope', '$timeout', 'Shows', 'Episodes', 'PB',
         }
 
         $scope.search = function(){
+            $scope.clear();
             Shows.get({'show': $scope.keyword}, function success(res){
                 if(_.isArray(res.Series)){
                     $scope.Series = res.Series;
@@ -22,18 +23,19 @@ var SearchCtrl = ['$scope', '$timeout', 'Shows', 'Episodes', 'PB',
         $scope.getEpisodes = function(show){
             Episodes.get({'show': show.id}, function success(res){
                 var episodes = _.filter(res.Episode, function(episode){
-                   return _.has(episode, 'EpisodeName') && episode.SeasonNumber > 0;
+                   return _.has(episode, 'EpisodeName')
+                       && episode.SeasonNumber > 0
+                       && episode.EpisodeName !== 'TBA';
                 });
                 episodes = _.sortBy(episodes, function(episode){
-                    return [episode.SeasonNumber, episode.EpisodeNumber].join("_");
+                    return episode.FirstAired;
                 }).reverse();
-                $scope.Episodes =  _.map(episodes, function(episode){
+                show.episodes =  _.map(episodes, function(episode){
                         episode.SeasonNumber = 'S0'+episode.SeasonNumber;
                         episode.magnet = 'img/loading.gif';
                         episode.SeriesName = show.SeriesName;
                         return episode;
                     });
-                $scope.title = 'Available Episodes:';
             });
         }
 
@@ -41,7 +43,6 @@ var SearchCtrl = ['$scope', '$timeout', 'Shows', 'Episodes', 'PB',
             episode.pbActive = true;
             PB.get({'keyword': episode.SeriesName + ' ' + episode.EpisodeName},
                 function success(res){
-                    debugger
                     if (res && res.results && res.results.length > 0) {
                         episode.pb = res.results[0].magnetlink;
                         episode.magnet = 'img/icon-magnet.gif';
@@ -50,6 +51,11 @@ var SearchCtrl = ['$scope', '$timeout', 'Shows', 'Episodes', 'PB',
                     }
                 }
             )
+        }
+
+        $scope.clear = function(){
+            $scope.Episodes = [];
+            $scope.Series = [];
         }
 
     }
