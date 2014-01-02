@@ -1,0 +1,47 @@
+<div class="container">
+    <div class="page-header">
+        <h1>TV Pirate</h1>
+
+        <p class="lead">Watch your favorite TV shows.</p>
+    </div>
+</div>
+
+<div class="search" ng-controller="SearchCtrl" data-ng-init="init()">
+
+    <div class="row">
+        <div class="search">
+            <div class="input-group">
+                <input type="text" class="form-control" ng-model="keyword">
+                      <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" ng-click="search()">Go!</button>
+                      </span>
+            </div>
+        </div>
+    </div>
+
+
+    <ng-include src="'shows'"></ng-include>
+
+
+</div>
+
+<script type='text/ng-template' id="shows">
+    <ul class="media-list">
+        <li class="media" ng-repeat="show in Series">
+            <div class="thumbnail">
+                <img class="media-object" ng-src="http://thetvdb.com/banners/{{show.banner}}">
+
+                <div class="caption">
+                    <h3 ng-bind="show.SeriesName"></h3>
+
+                    <p ng-bind="show.Overview"></p>
+
+                    <p><a ng-click="getEpisodes(show)" class="btn btn-primary" role="button">Episodes</a></p>
+                </div>
+
+                <episodes ng-model="show"></episodes>
+
+            </div>
+        </li>
+    </ul>
+</script>
