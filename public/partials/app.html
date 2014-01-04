@@ -20,12 +20,6 @@
     </div>
 
 
-    <ng-include src="'shows'"></ng-include>
-
-
-</div>
-
-<script type='text/ng-template' id="shows">
     <ul class="media-list">
         <li class="media" ng-repeat="show in Series">
             <div class="thumbnail">
@@ -36,7 +30,9 @@
 
                     <p ng-bind="show.Overview"></p>
 
-                    <p><a ng-click="getEpisodes(show)" class="btn btn-primary" role="button">Episodes</a></p>
+                    <div><a ng-click="getEpisodes(show)" class="btn btn-primary" role="button">Episodes</a>
+                        <a ng-click="addShow(show)" class="btn btn-info" role="button">Watch</a>
+                    </div>
                 </div>
 
                 <episodes ng-model="show"></episodes>
@@ -44,4 +40,5 @@
             </div>
         </li>
     </ul>
-</script>
+
+</div>
