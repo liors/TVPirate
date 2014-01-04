@@ -2,8 +2,8 @@
 
 /* Controllers */
 angular.module('tvPirateApp.controllers', ['angular-underscore']);
-var SearchCtrl = ['$scope', '$timeout', 'Shows', 'Episodes', 'PB',
-    function($scope, $timeout, Shows, Episodes, PB) {
+var SearchCtrl = ['$scope', '$location', 'Shows', 'Episodes', 'PB','DataService',
+    function($scope, $location, Shows, Episodes, PB, DataService) {
         $scope.init = function(){
 
         }
@@ -17,7 +17,13 @@ var SearchCtrl = ['$scope', '$timeout', 'Shows', 'Episodes', 'PB',
                     $scope.Series = [];
                     $scope.Series.push(res.Series);
                 }
+
             });
+        }
+
+        $scope.addShow = function(show){
+            DataService.addShow(show);
+             $location.path('/shows');
         }
 
         $scope.getEpisodes = function(show){
@@ -58,5 +64,41 @@ var SearchCtrl = ['$scope', '$timeout', 'Shows', 'Episodes', 'PB',
             $scope.Series = [];
         }
 
+    }
+];
+
+var ShowsCtrl = ['$scope', '$location', 'Shows', 'Episodes', 'PB', 'DataService',
+    function($scope, $location, Shows, Episodes, PB, DataService) {
+        $scope.Series = DataService.getShows();
+
+        $scope.removeShow = function(show){
+             DataService.removeShow(show);
+            $scope.Series = DataService.getShows();
+        }
+
+        $scope.home = function(){
+            $location.path('/');
+        }
+
+        // lame fix me
+
+        $scope.getEpisodes = function(show){
+            Episodes.get({'show': show.id}, function success(res){
+                var episodes = _.filter(res.Episode, function(episode){
+                   return _.has(episode, 'EpisodeName')
+                       && episode.SeasonNumber > 0
+                       && episode.EpisodeName !== 'TBA';
+                });
+                episodes = _.sortBy(episodes, function(episode){
+                    return episode.FirstAired;
+                }).reverse();
+                show.episodes =  _.map(episodes, function(episode){
+                        episode.SeasonNumber = 'S0'+episode.SeasonNumber;
+                        episode.magnet = 'img/loading.gif';
+                        episode.SeriesName = show.SeriesName;
+                        return episode;
+                    });
+            });
+        }
     }
 ];
