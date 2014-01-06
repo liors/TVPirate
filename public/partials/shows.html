@@ -6,11 +6,10 @@
     </div>
 
 
-    <div class="row">
-        <div class="col-xs-6" ng-repeat="show in Series">
+    <div class="row shows">
+        <div class="col-xs-6 no-right" ng-repeat="show in Series">
             <div class="thumbnail">
                 <img ng-src="http://thetvdb.com/banners/{{show.banner}}">
-
                 <div class="caption">
                     <h3 ng-bind="show.SeriesName"></h3>
 
@@ -19,9 +18,7 @@
                     <p><a ng-click="getEpisodes(show)" class="btn btn-primary" role="button">Episodes</a> <a ng-click="removeShow(show)"
                                                                                          class="btn btn-default"
                                                                                          role="button">Remove</a></p>
-
                     <episodes ng-model="show"></episodes>
-                    
                 </div>
             </div>
         </div>
