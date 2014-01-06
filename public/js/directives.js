@@ -2,7 +2,7 @@
 
 /* Directives */
 var directives = angular.module('tvPirateApp.directives', []);
-directives.directive('episodes', ['Episodes', function(Episodes) {
+directives.directive('episodes', ['Episodes', 'PB', function(Episodes, PB) {
     return {
         restrict: 'E',
         templateUrl: 'partials/episodes.html',
