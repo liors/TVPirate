@@ -6,7 +6,7 @@ directives.directive('episodes', ['Episodes', 'PB', function(Episodes, PB) {
     return {
         restrict: 'E',
         templateUrl: 'partials/episodes.html',
-        link: function(scope) {
+        link: function(scope, elem) {
             scope.getEpisodes = function(show){
                 Episodes.get({'show': show.id}, function success(res){
                     var episodes = _.filter(res.Episode, function(episode){
@@ -18,11 +18,19 @@ directives.directive('episodes', ['Episodes', 'PB', function(Episodes, PB) {
                         return episode.FirstAired;
                     }).reverse();
                     show.episodes =  _.map(episodes, function(episode){
-                            episode.SeasonNumber = 'S0'+episode.SeasonNumber;
-                            episode.magnet = 'img/loading.gif';
-                            episode.SeriesName = show.SeriesName;
-                            return episode;
-                        });
+                        if (_.isObject(episode.FirstAired)){
+                            episode.FirstAired = "";
+                        } else {
+                            var previousweek= new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000);
+                            if(Date.parse(episode.FirstAired) > previousweek.getTime()){
+                                episode.new = true;
+                            }
+                        }
+                        episode.SeasonNumber = 'S0'+episode.SeasonNumber;
+                        episode.magnet = 'img/loading.gif';
+                        episode.SeriesName = show.SeriesName;
+                        return episode;
+                    });
                 });
             }
 
@@ -38,6 +46,10 @@ directives.directive('episodes', ['Episodes', 'PB', function(Episodes, PB) {
                         }
                     }
                 )
+            }
+
+            scope.close = function(show) {
+                show.episodes = [];
             }
         }
     }
