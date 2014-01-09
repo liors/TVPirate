@@ -5,7 +5,7 @@ angular.module('tvPirateApp.controllers', ['angular-underscore']);
 var SearchCtrl = ['$scope', '$location', 'Shows', 'Episodes', 'PB','DataService',
     function($scope, $location, Shows, Episodes, PB, DataService) {
         $scope.init = function(){
-
+            $scope.shows = DataService.getShows().length > 0;
         }
 
         $scope.search = function(){
@@ -31,6 +31,9 @@ var SearchCtrl = ['$scope', '$location', 'Shows', 'Episodes', 'PB','DataService'
             $scope.Series = [];
         }
 
+        $scope.gotToShows = function(show){
+             $location.path('/shows');
+        }
     }
 ];
 
