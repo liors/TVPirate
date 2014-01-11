@@ -36,7 +36,7 @@ directives.directive('episodes', ['Episodes', 'PB', function(Episodes, PB) {
 
             scope.getPB = function(episode){
                 episode.pbActive = true;
-                PB.get({'keyword': episode.SeriesName + ' ' + episode.EpisodeName},
+                PB.get({'episode': JSON.stringify(_.pick(episode, 'SeriesName', 'EpisodeName', 'SeasonNumber', 'EpisodeNumber'))},
                     function success(res){
                         if (res && res.results && res.results.length > 0) {
                             episode.pb = res.results[0].magnetlink;

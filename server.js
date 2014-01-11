@@ -29,38 +29,69 @@ app.get('/PB', function(req, res){
     var request = require('request'),
     jsdom = require('jsdom');
 
-    var options = {
-        url: 'http://pirateshit.com/search/' + encodeURIComponent(req.query.keyword) + '+720p/0/7/0',
+    getPBResults({
+        url: 'http://pirateshit.com/search/' + getShowAndEpisodeNames(req.query.episode) + '+720p/0/7/0',
         headers: {
             'User-Agent': 'Googlebot'
         }
-    };
-    request(options, function (error, response, body) {
-    if (error && response.statusCode !== 200) {
-            console.log('Error when contacting thepiratebay.se')
-        }
-        jsdom.env({
-            html: body,
-            scripts: ["http://code.jquery.com/jquery.js"],
-            done: function (errors, window) {
-                var $ = window.$;
-                var $rows = $('#searchResult').find("tr:gt(0)");
-                var maxResults = $rows.length;
-                var out = [];
-                if ($rows && $rows.length > 0) {
-                    for (var i = 0; i < maxResults; i++) {
-                        out.push({
-                            releasename: $($rows[i]).find('td:nth-child(2) > div ').text(),
-                            magnetlink: $($rows[i]).find('td:nth-child(2)').find('a:eq(1)').attr('href'),
-                            seeders: $($rows[i]).find("td:nth-child(3)").html(),
-                            leechers: $($rows[i]).find("td:nth-child(4)").html()
-                        });
-                    }
+    }, function(errors, window){
+        var out = parseResults(window);
+        if(out.length > 0){
+            res.send({results: out})
+        } else {
+            getPBResults({
+                url: 'http://pirateshit.com/search/' + getShowNameAndEpisodeNumber(req.query.episode) + '+720p/0/7/0',
+                headers: {
+                    'User-Agent': 'Googlebot'
                 }
+            }, function(errors, window){
+                var out = parseResults(window);
                 res.send({results: out})
-            }
-        });
+            });
+        }
     });
+
+    function parseResults(window){
+        var $ = window.$;
+        var $rows = $('#searchResult').find("tr:gt(0)");
+        var maxResults = $rows.length;
+        var out = [];
+        if ($rows && $rows.length > 0) {
+            for (var i = 0; i < maxResults; i++) {
+                out.push({
+                    releasename: $($rows[i]).find('td:nth-child(2) > div ').text(),
+                    magnetlink: $($rows[i]).find('td:nth-child(2)').find('a:eq(1)').attr('href'),
+                    seeders: $($rows[i]).find("td:nth-child(3)").html(),
+                    leechers: $($rows[i]).find("td:nth-child(4)").html()
+                });
+            }
+        }
+        return out;
+    }
+
+    function getPBResults(options, callback){
+        request(options, function (error, response, body) {
+            if (error && response.statusCode !== 200) {
+                console.log('Error when contacting thepiratebay.se')
+            }
+            jsdom.env({
+                html: body,
+                scripts: ["http://code.jquery.com/jquery.js"],
+                done: callback
+            });
+        });
+    }
+
+    function getShowAndEpisodeNames(episode){
+        episode = JSON.parse(episode);
+        return encodeURIComponent(episode.SeriesName + ' ' + episode.EpisodeName);
+    }
+
+
+    function getShowNameAndEpisodeNumber(episode){
+        episode = JSON.parse(episode);
+        return encodeURIComponent(episode.SeriesName + ' ' + episode.SeasonNumber + 'E' + episode.EpisodeNumber);
+    }
 });
 
 app.get("/1", function(req, res) {
