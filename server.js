@@ -7,7 +7,6 @@ var tvDB    = require("thetvdb-api"),
 
 
 app.get('/show', function(req, res){
-    console.log(req.query.keyword);
     tvDB(key).getSeries(req.query.keyword, function(err, response) {
         if (!err) {
             res.send(response.Data);
@@ -28,9 +27,9 @@ app.get('/episodes', function(req, res){
 app.get('/PB', function(req, res){
     var request = require('request'),
     jsdom = require('jsdom');
-
+    var episode = JSON.parse(req.query.episode);
     getPBResults({
-        url: 'http://pirateshit.com/search/' + getShowAndEpisodeNames(req.query.episode) + '+720p/0/7/0',
+        url: 'http://pirateshit.com/search/' + getShowAndEpisodeNames(episode) + '+720p/0/7/0',
         headers: {
             'User-Agent': 'Googlebot'
         }
@@ -40,7 +39,7 @@ app.get('/PB', function(req, res){
             res.send({results: out})
         } else {
             getPBResults({
-                url: 'http://pirateshit.com/search/' + getShowNameAndEpisodeNumber(req.query.episode) + '+720p/0/7/0',
+                url: 'http://pirateshit.com/search/' + getShowNameAndEpisodeNumber(episode) + '+720p/0/7/0',
                 headers: {
                     'User-Agent': 'Googlebot'
                 }
@@ -83,14 +82,12 @@ app.get('/PB', function(req, res){
     }
 
     function getShowAndEpisodeNames(episode){
-        episode = JSON.parse(episode);
         return encodeURIComponent(episode.SeriesName + ' ' + episode.EpisodeName);
     }
 
-
     function getShowNameAndEpisodeNumber(episode){
-        episode = JSON.parse(episode);
-        return encodeURIComponent(episode.SeriesName + ' ' + episode.SeasonNumber + 'E' + episode.EpisodeNumber);
+        var episodeNumber = parseInt(episode.EpisodeNumber);
+        return encodeURIComponent(episode.SeriesName + ' ' + episode.SeasonNumber + 'E' +  (episodeNumber < 9 ? '0' + episodeNumber : episodeNumber));
     }
 });
 
