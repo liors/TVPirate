@@ -39,7 +39,7 @@ app.get('/PB', function(req, res){
             res.send({results: out})
         } else {
             getPBResults({
-                url: 'http://pirateshit.com/search/' + getShowNameAndEpisodeNumber(episode) + '+720p/0/7/0',
+                url: 'http://thepiratebay.se/search/' + getShowNameAndEpisodeNumber(episode) + '+720p/0/7/0',
                 headers: {
                     'User-Agent': 'Googlebot'
                 }
