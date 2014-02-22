@@ -40,6 +40,23 @@ var SearchCtrl = ['$scope', '$location', 'Shows', 'Episodes', 'PB','DataService'
 var ShowsCtrl = ['$scope', '$location', 'Shows', 'Episodes', 'PB', 'DataService',
     function($scope, $location, Shows, Episodes, PB, DataService) {
         $scope.Series = DataService.getShows();
+        _.each($scope.Series, function(show){
+           Episodes.get({'show': show.id}, function success(res){
+               var episodes = _.filter(res.Episode, function(episode){
+                   return _.has(episode, 'EpisodeName')
+                       && episode.SeasonNumber > 0
+                       && episode.EpisodeName !== 'TBA';
+               });
+               var previousweek= new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000);
+               _.each(episodes, function(episode){
+                   if(Date.parse(episode.FirstAired) > previousweek.getTime()
+                       && Date.parse(episode.FirstAired) < new Date()){
+                       show.hasNew = true;
+                       return;
+                   }
+               });
+           });
+        });
 
         $scope.removeShow = function(show){
              DataService.removeShow(show);

@@ -22,7 +22,8 @@ directives.directive('episodes', ['Episodes', 'PB', function(Episodes, PB) {
                             episode.FirstAired = "";
                         } else {
                             var previousweek= new Date(new Date().getTime() - 7 * 24 * 60 * 60 * 1000);
-                            if(Date.parse(episode.FirstAired) > previousweek.getTime()){
+                            if(Date.parse(episode.FirstAired) > previousweek.getTime()
+                                && Date.parse(episode.FirstAired) < new Date()){
                                 episode.new = true;
                             }
                         }
